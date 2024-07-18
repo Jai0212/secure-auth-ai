@@ -6,3 +6,4 @@ package-lock.json
 frontend/package-lock.json
 backend/MOCK_DATA.csv
 build/
+.DS_Store
