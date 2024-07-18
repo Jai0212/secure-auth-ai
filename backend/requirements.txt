@@ -75,14 +75,7 @@ joblib==1.4.2
 jsonpatch==1.33
 jsonpointer==2.4
 kaleido==0.2.1
-keras==3.4.1
 kiwisolver==1.4.5
-kubernetes==29.0.0
-langchain==0.2.1
-langchain-community==0.2.1
-langchain-core==0.2.3
-langchain-text-splitters==0.2.0
-langsmith==0.1.69
 libclang==18.1.1
 lxml==5.2.2
 Markdown==3.6
@@ -171,7 +164,6 @@ safetensors==0.4.3
 scikit-learn==1.5.1
 scipy==1.12.0
 seaborn==0.13.2
-secure-auth-ai @ file:///Users/jaijoshi/Desktop/JJ%20Extra%20Curricular/cs_projects/secure_auth_ai/secure-auth-ai
 setuptools==70.0.0
 shellingham==1.5.4
 six==1.16.0
@@ -185,14 +177,11 @@ TBB==0.2
 tenacity==8.2.3
 tensorboard==2.16.2
 tensorboard-data-server==0.7.2
-tensorflow==2.16.2
 termcolor==2.4.0
-tf_keras==2.16.0
 threadpoolctl==3.5.0
 tokenizers==0.19.1
 toml==0.10.2
 tomlkit==0.12.4
-torch==2.3.1
 tqdm==4.66.4
 transformers==4.42.3
 typeguard==4.2.1
