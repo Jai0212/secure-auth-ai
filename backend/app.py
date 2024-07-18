@@ -45,7 +45,7 @@ def call_sign_up():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         password = data["password"]
         location = data["location"]
         device = data["device"]
@@ -54,7 +54,7 @@ def call_sign_up():
         unique_identifiers = data.get("unique_identifiers", None)
 
         value, success, message = sign_up(
-            SECURE_AUTH_AI_PACKAGE_USER,
+            SECURE_AUTH_AI_TABLE_KEY,
             password,
             location,
             device,
@@ -87,14 +87,14 @@ def call_log_in():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         password = data["password"]
         location = data["location"]
         device = data["device"]
         other_details = data["other_details"]
 
         value, success, message = log_in(
-            SECURE_AUTH_AI_PACKAGE_USER, password, location, device, other_details
+            SECURE_AUTH_AI_TABLE_KEY, password, location, device, other_details
         )
 
         return jsonify({"value": value, "success": success, "message": message})
@@ -122,12 +122,12 @@ def call_get_user_details():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         identifier = data["identifier"]
         value = data["value"]
 
         value, success, message = get_user_details(
-            SECURE_AUTH_AI_PACKAGE_USER, identifier, value
+            SECURE_AUTH_AI_TABLE_KEY, identifier, value
         )
 
         return jsonify({"value": value, "success": success, "message": message})
@@ -155,9 +155,9 @@ def call_get_all_details():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
 
-        value, success, message = get_all_details(SECURE_AUTH_AI_PACKAGE_USER)
+        value, success, message = get_all_details(SECURE_AUTH_AI_TABLE_KEY)
 
         return jsonify({"value": value, "success": success, "message": message})
 
@@ -184,7 +184,7 @@ def call_update_user_details():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         identifier = data["identifier"]
         value = data["value"]
         details = data["details"]
@@ -192,7 +192,7 @@ def call_update_user_details():
         break_defaults = data.get("break_defaults", False)
 
         value, success, message = update_user_details(
-            SECURE_AUTH_AI_PACKAGE_USER, identifier, value, details, break_defaults
+            SECURE_AUTH_AI_TABLE_KEY, identifier, value, details, break_defaults
         )
 
         return jsonify({"value": value, "success": success, "message": message})
@@ -220,10 +220,10 @@ def call_add_column():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         column_name = data["column_name"]
 
-        value, success, message = add_column(SECURE_AUTH_AI_PACKAGE_USER, column_name)
+        value, success, message = add_column(SECURE_AUTH_AI_TABLE_KEY, column_name)
 
         return jsonify({"value": value, "success": success, "message": message})
 
@@ -250,11 +250,11 @@ def call_remove_column():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         column_name = data["column_name"]
 
         value, success, message = remove_column(
-            SECURE_AUTH_AI_PACKAGE_USER, column_name
+            SECURE_AUTH_AI_TABLE_KEY, column_name
         )
 
         return jsonify({"value": value, "success": success, "message": message})
@@ -282,12 +282,12 @@ def call_remove_user():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         identifier = data["identifier"]
         value = data["value"]
 
         value, success, message = remove_user(
-            SECURE_AUTH_AI_PACKAGE_USER, identifier, value
+            SECURE_AUTH_AI_TABLE_KEY, identifier, value
         )
 
         return jsonify({"value": value, "success": success, "message": message})
@@ -315,13 +315,13 @@ def call_verify_mfa():
     try:
         data = request.json
 
-        SECURE_AUTH_AI_PACKAGE_USER = data["SECURE_AUTH_AI_PACKAGE_USER"]
+        SECURE_AUTH_AI_TABLE_KEY = data["SECURE_AUTH_AI_TABLE_KEY"]
         provided_mfa_key = data["provided_mfa_key"]
         identifier = data["identifier"]
         value = data["value"]
 
         value, success, message = verify_mfa(
-            SECURE_AUTH_AI_PACKAGE_USER, provided_mfa_key, identifier, value
+            SECURE_AUTH_AI_TABLE_KEY, provided_mfa_key, identifier, value
         )
 
         return jsonify({"value": value, "success": success, "message": message})

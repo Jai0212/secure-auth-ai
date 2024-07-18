@@ -34,7 +34,7 @@ SecureAuthAI integrates seamlessly with popular web frameworks:
 
 Install SecureAuthAI via npm:
 ```bash
-npm i secure-auth-ai
+npm install secure-auth-ai
 ```
 
 Import the package in your project:  
