@@ -151,7 +151,7 @@ def log_in(
                     return "", False, "SERVER - Error in setting values"
             else:
                 set_values_var = _set_values(
-                    SECURE_AUTH_AI_TABLE_KEY, row[1], location, device
+                    SECURE_AUTH_AI_TABLE_KEY, row[1], location, device, True
                 )
 
                 if not isinstance(set_values_var, str):
