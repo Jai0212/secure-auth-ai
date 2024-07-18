@@ -1,14 +1,14 @@
 {
     "name": "secure-auth-ai",
-    "version": "1.0.1",
-    "description": "SecureAuthAI is an npm package designed for web developers seeking to implement secure sign-up and log-in functionalities with advanced security measures. It includes multi-factor authentication (MFA), PostgreSQL database integration, anomaly detection, and AI-based security measures, providing automated real-time user management.",
+    "version": "1.0.5",
+    "description": "A package designed for web developers seeking to implement secure sign-up and log-in functionalities with advanced security measures...",
     "main": "api.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Jai0212/secure-auth-ai"
+        "url": "git+https://github.com/Jai0212/secure-auth-ai.git"
     },
     "keywords": [
         "authenticate",
@@ -34,7 +34,16 @@
     "license": "MIT",
     "dependencies": {
         "axios": "^0.24.0",
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "path-browserify": "^1.0.1",
+        "os-browserify": "^0.3.0"
     },
-    "readme": "../README.md"
+    "browser": {
+        "path": "path-browserify"
+    },
+    "resolve": {
+        "fallback": {
+            "crypto": false
+        }
+    }
 }

@@ -1,7 +1,6 @@
 const axios = require('axios');
 
-require('dotenv').config();
-const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_URL = 'https://secure-auth-ai.onrender.com/'
 
 /**
  * Each function needs to be called using the axios package.

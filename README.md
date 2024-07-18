@@ -68,7 +68,7 @@ const SECURE_AUTH_AI_TABLE_KEY = await initializePackageSAA(["email"]);
 
 const signUpResponse = await signUpSAA(SECURE_AUTH_AI_TABLE_KEY, "hello", {"email": "placeholder@example.com", "phone_number": "+123456789"});
 
-if (signUpResponse.success == True) {
+if (signUpResponse.success) {
     const updateResponse = await updateUserDetailsSAA(SECURE_AUTH_AI_TABLE_KEY, "email", "placeholder@example.com", {"phone_number": "+199999999"});
 
     console.log(updateResponse.message)
@@ -123,10 +123,8 @@ For detailed usage of each function, refer to the `api.js` file in the `frontend
 ## Acknowledgments
 Special thanks to Render, Neon, and npm for their support in hosting and distributing this package.
 
-I worked on this project alone and am actively working to improve this package.
-
 ### Contact
-*For suggestions, feedback, collaborations, or bug reports, please contact me via email: jj.joshijai@gmail.com.*
+*For suggestions, feedback, collaborations, or bug reports, please contact me via email: jj.joshijai@gmail.com*
 
 Author and Date  
 by Jai Joshi  

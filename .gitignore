@@ -7,4 +7,5 @@ frontend/package-lock.json
 backend/dataset.csv
 backend/.DS_Store
 .DS_Store
+frontend/README.md
 build/
