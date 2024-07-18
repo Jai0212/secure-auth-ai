@@ -1,0 +1,25 @@
+{
+    "name": "secure-auth-ai",
+    "version": "1.0.0",
+    "description": "Package to authenticate users integrated with AI and a database",
+    "main": "api.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jai0212/secure-auth-ai"
+    },
+    "keywords": [
+        "authenticate",
+        "database",
+        "web-development",
+        "ai-secure"
+    ],
+    "author": "Jai Joshi",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^0.24.0",
+        "dotenv": "^16.4.5"
+    }
+}
