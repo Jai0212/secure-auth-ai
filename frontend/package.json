@@ -1,7 +1,7 @@
 {
     "name": "secure-auth-ai",
     "version": "1.0.1",
-    "description": "SecureAuthAI is an npm package designed for web developers seeking to implement secure sign-up and log-in functionalities with advanced security measures. It includes multi-factor authentication (MFA), anomaly detection, and integrates seamlessly with PostgreSQL databases. Developed in JavaScript with a Python backend, SecureAuthAI supports popular frameworks like React, Vue, and Angular, providing real-time user management and AI-based security features.",
+    "description": "SecureAuthAI is an npm package designed for web developers seeking to implement secure sign-up and log-in functionalities with advanced security measures. It includes multi-factor authentication (MFA), PostgreSQL database integration, anomaly detection, and AI-based security measures, providing automated real-time user management.",
     "main": "api.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

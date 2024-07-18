@@ -17,7 +17,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def sign_up(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     password: str,
     location: List[str],
     device: str,
@@ -57,7 +57,7 @@ def sign_up(
                 values.append(value)
 
         insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
-            sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             sql.SQL(", ").join(map(sql.Identifier, columns)),
             sql.SQL(", ").join(sql.Placeholder() * len(values)),
         )
@@ -67,7 +67,7 @@ def sign_up(
         conn.commit()
 
         set_values_var = _set_values(
-            SECURE_AUTH_AI_PACKAGE_USER,
+            SECURE_AUTH_AI_TABLE_KEY,
             tokenized_password,
             location,
             device,
@@ -91,7 +91,7 @@ def sign_up(
 
 
 def log_in(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     password: str,
     location: List[str],
     device: str,
@@ -116,7 +116,7 @@ def log_in(
             values.append(value)
 
         select_query = sql.SQL("SELECT * FROM {table} WHERE {conditions}").format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             conditions=sql.SQL(" AND ").join(columns),
         )
 
@@ -127,7 +127,7 @@ def log_in(
         for row in results:
             if _is_correct_password(password, row[1]):
                 set_values_var = _set_values(
-                    SECURE_AUTH_AI_PACKAGE_USER, row[1], location, device
+                    SECURE_AUTH_AI_TABLE_KEY, row[1], location, device
                 )
                 if isinstance(set_values_var, str):
                     # Checks using the AI model and anomaly detection if login attempt is safe or not
@@ -141,7 +141,7 @@ def log_in(
                         )
                         and row[6] < 5
                     ):
-                        if _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER, row[1]):
+                        if _reset_attempts(SECURE_AUTH_AI_TABLE_KEY, row[1]):
                             return "", True, "User logged in"
                         else:
                             return "", False, "SERVER - Error resetting attempts"
@@ -151,7 +151,7 @@ def log_in(
                     return "", False, "SERVER - Error in setting values"
             else:
                 set_values_var = _set_values(
-                    SECURE_AUTH_AI_PACKAGE_USER, row[1], location, device
+                    SECURE_AUTH_AI_TABLE_KEY, row[1], location, device
                 )
 
                 if not isinstance(set_values_var, str):
@@ -174,7 +174,7 @@ def log_in(
 
 
 def get_user_details(
-    SECURE_AUTH_AI_PACKAGE_USER: str, identifier: str, value: str
+    SECURE_AUTH_AI_TABLE_KEY: str, identifier: str, value: str
 ) -> Tuple[List[Any], bool, str]:
     """Get the details of the user based on an identifier, returns [] if user does not exist
     Function can also be used to check if the user exists"""
@@ -187,7 +187,7 @@ def get_user_details(
         cur = conn.cursor()
 
         select_query = sql.SQL("SELECT * FROM {table} WHERE {identifier} = %s").format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             identifier=sql.Identifier(identifier),
         )
 
@@ -208,7 +208,7 @@ def get_user_details(
 
 
 def get_all_details(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
 ) -> Tuple[List[Any], bool, str]:
     """Get the details of all users"""
 
@@ -220,7 +220,7 @@ def get_all_details(
         cur = conn.cursor()
 
         select_query = sql.SQL("SELECT * FROM {table}").format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER)
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY)
         )
 
         cur.execute(select_query)
@@ -240,7 +240,7 @@ def get_all_details(
 
 
 def update_user_details(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     identifier: str,
     value: str,
     details: Dict[str, Any],
@@ -289,7 +289,7 @@ def update_user_details(
             WHERE {identifier} = %s;
             """
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             set_clause=set_clause,
             identifier=sql.Identifier(identifier),
         )
@@ -313,7 +313,7 @@ def update_user_details(
 
 
 def add_column(
-    SECURE_AUTH_AI_PACKAGE_USER: str, column_name: str
+    SECURE_AUTH_AI_TABLE_KEY: str, column_name: str
 ) -> Tuple[str, bool, str]:
     """Add a column to the table
     Column datatype is set to VARCHAR(100)"""
@@ -344,7 +344,7 @@ def add_column(
             ADD COLUMN {column} VARCHAR(100);
             """
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             column=sql.Identifier(column_name),
         )
 
@@ -365,7 +365,7 @@ def add_column(
 
 
 def remove_column(
-    SECURE_AUTH_AI_PACKAGE_USER: str, column_name: str
+    SECURE_AUTH_AI_TABLE_KEY: str, column_name: str
 ) -> Tuple[str, bool, str]:
     """Remove a column from the table"""
 
@@ -395,7 +395,7 @@ def remove_column(
             DROP COLUMN {column};
             """
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             column=sql.Identifier(column_name),
         )
 
@@ -416,7 +416,7 @@ def remove_column(
 
 
 def remove_user(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     identifier: str,
     value: str,
 ) -> Tuple[str, bool, str]:
@@ -430,7 +430,7 @@ def remove_user(
         cur = conn.cursor()
 
         delete_query = sql.SQL("DELETE FROM {table} WHERE {identifier} = %s").format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             identifier=sql.Identifier(identifier),
         )
 
@@ -451,7 +451,7 @@ def remove_user(
 
 
 def verify_mfa(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     provided_mfa_key: str,
     identifier: str,
     value: str,
@@ -468,7 +468,7 @@ def verify_mfa(
         select_query = sql.SQL(
             "SELECT * FROM {table} WHERE {identifier} = {value}"
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             identifier=sql.Identifier(identifier),
             value=sql.Literal(value),
         )
@@ -488,7 +488,7 @@ def verify_mfa(
         if results[0][8] == provided_mfa_key:
             tokenized_password = results[0][1]
 
-            if not _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER, tokenized_password):
+            if not _reset_attempts(SECURE_AUTH_AI_TABLE_KEY, tokenized_password):
                 return "", False, "SERVER - Error in resetting attempts"
 
             new_mfa_key = str(uuid.uuid4())
@@ -500,7 +500,7 @@ def verify_mfa(
                 WHERE password = %s;
                 """
             ).format(
-                table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+                table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
                 new_mfa_key=sql.Literal(new_mfa_key),
             )
 
@@ -521,7 +521,7 @@ def verify_mfa(
             conn.close()
 
 
-def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -> bool:
+def _reset_attempts(SECURE_AUTH_AI_TABLE_KEY: str, tokenized_password: str) -> bool:
     """Updates and resets login attempts. Please report to creator in case of any error in this function"""
 
     conn = None
@@ -533,7 +533,7 @@ def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -
         cur = conn.cursor()
 
         select_query = sql.SQL("SELECT * FROM {table} WHERE password = %s").format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
         )
 
         cur.execute(select_query, (tokenized_password,))
@@ -550,7 +550,7 @@ def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -
             SET total_logins = total_logins + 1
             WHERE password = %s;
             """
-        ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+        ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
         update_all_attempts_query = sql.SQL(
             """
@@ -558,7 +558,7 @@ def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -
             SET all_attempts = array_append(all_attempts, %s)
             WHERE password = %s;
             """
-        ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+        ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
         cur.execute(
             update_all_attempts_query,
@@ -574,7 +574,7 @@ def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -
             SET attempts = 0
             WHERE password = %s;
             """
-        ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+        ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
         cur.execute(update_attempts_query, (row[1],))
         cur.execute(update_total_logins_query, (row[1],))
@@ -593,7 +593,7 @@ def _reset_attempts(SECURE_AUTH_AI_PACKAGE_USER: str, tokenized_password: str) -
 
 
 def _set_values(
-    SECURE_AUTH_AI_PACKAGE_USER: str,
+    SECURE_AUTH_AI_TABLE_KEY: str,
     tokenized_password: str,
     location: List[str],
     device: str,
@@ -616,7 +616,7 @@ def _set_values(
             SET prev_logins = array_append(prev_logins, CURRENT_TIMESTAMP)
             WHERE password = %s;
             """
-        ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+        ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
         update_prev_locations_query = sql.SQL(
             """
@@ -625,7 +625,7 @@ def _set_values(
             WHERE password = %s;
             """
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             longitude=sql.Literal(location[0]),
             latitude=sql.Literal(location[1]),
         )
@@ -637,7 +637,7 @@ def _set_values(
             WHERE password = %s;
             """
         ).format(
-            table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+            table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
             device=sql.Literal(device),
         )
 
@@ -648,7 +648,7 @@ def _set_values(
                 SET attempts = attempts + 1
                 WHERE password = %s;
                 """
-            ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+            ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
             cur.execute(update_attempts_query, (tokenized_password,))
 
@@ -660,7 +660,7 @@ def _set_values(
                 SET total_logins = 1
                 WHERE password = %s;
                 """
-            ).format(table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER))
+            ).format(table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY))
 
             mfa_key = str(uuid.uuid4())
 
@@ -671,7 +671,7 @@ def _set_values(
                 WHERE password = %s;
                 """
             ).format(
-                table=sql.Identifier(SECURE_AUTH_AI_PACKAGE_USER),
+                table=sql.Identifier(SECURE_AUTH_AI_TABLE_KEY),
                 mfa_key=sql.Literal(mfa_key),
             )
 
