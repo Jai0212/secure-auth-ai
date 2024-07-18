@@ -60,7 +60,7 @@ Each response has three attributes to it:
 When you first use the package, you must call the function `initializePackageSAA()` which will give you a token which must be used to refer to your table in other functions. This token is the first parameter in all other functions.
 
 
-## Example
+## Example JS
 ```bash
 import { initializePackageSAA, signUpSAA, updateUserDetailsSAA, getUserDetailsSAA } from 'secure-auth-ai';
  
@@ -79,7 +79,82 @@ if (signUpResponse.success) {
 }
 ```
 
+## Example React
+```bash
+import React, { useEffect, useState } from 'react';
+import { initializePackageSAA } from 'secure-auth-ai'; // Import the package
+
+function App() {
+  const [token, setToken] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const result = await initializePackageSAA(); // Call the function to generate a unique token
+        setToken(result.value); // Store the unique token
+      } catch (err) {
+        setError('Error generating token');
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>SecureAuthAI Package Demo</h1>
+        {token ? (
+          <p>Your unique token: {token}</p> // Display the unique token
+        ) : (
+          <p>{error || 'Generating token...'}</p>
+        )}
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+
+## Example Vue.js
+```bash
+<template>
+  <div>
+    <h1>Welcome</h1>
+    <p v-if="data.success">Key: {{ data.value }}</p>
+    <p v-else>{{ error }}</p>
+  </div>
+</template>
+
+<script>
+import { initializePackageSAA } from 'secure-auth-ai'; // Import the package
+
+export default {
+  data() {
+    return {
+      data: { message: '', success: false, value: '' },
+      error: ''
+    };
+  },
+  async created() {
+    try {
+      const result = await initializePackageSAA(); // Call the function
+      this.data = result; // Store the result
+    } catch (error) {
+      console.error('Error initializing package:', error);
+      this.error = 'Error retrieving data';
+    }
+  }
+};
+</script>
+```
+
 Everytime the function `logInSAA` is called, using the AI model and anomaly detection, it is checked whether the login attempt is safe or not. If it is not safe, you are required to call `verifyMfaSSA` to do the MFA.
+
+**NOTE**: Initally it can take about a minute to get a response as the backend needs to load up.
 
 ## Available Functions
 
@@ -93,6 +168,8 @@ Everytime the function `logInSAA` is called, using the AI model and anomaly dete
 * addColumnSAA
 * removeColumnSAA
 * removeUserSAA
+
+**NOTE**: All functions are asynchronous
 
 For detailed usage of each function, refer to the `api.js` file in the `frontend` directory.
 
@@ -119,6 +196,19 @@ For detailed usage of each function, refer to the `api.js` file in the `frontend
 * `backend/` - Core logic and AI model implementation.
 * `frontend/` - API calls and frontend integration.
 
+
+## Webpack Configuration
+
+If you're using React (Webpack) and encounter issues with missing core Node.js modules (like `crypto`), you may need to update your Webpack configuration. Add the following to your `webpack.config.js` (found inside `node_modules/react-scripts/config/`):
+
+```js
+resolve: {
+  fallback: {
+    crypto: false,
+    // Add other fallbacks if necessary
+  }
+}
+```
 
 ## Acknowledgments
 Special thanks to Render, Neon, and npm for their support in hosting and distributing this package.
