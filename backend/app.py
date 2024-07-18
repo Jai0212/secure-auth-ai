@@ -10,6 +10,7 @@ CORS(app)
 # The functions in main.py are the core functions that handle the logic of the SecureAuthAI package
 # Each function checks for the appropriate parameters and returns the appropriate values in case of an error
 
+
 @app.route("/initialize-package", methods=["POST"])
 def call_initialize_package():
     try:
@@ -349,4 +350,4 @@ def call_default():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
