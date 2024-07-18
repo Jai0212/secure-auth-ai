@@ -5,5 +5,6 @@ frontend/node_modules/
 package-lock.json
 frontend/package-lock.json
 backend/dataset.csv
+backend/.DS_Store
+.DS_Store
 build/
-.DS_Storegit
