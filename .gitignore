@@ -1,11 +1,7 @@
 backend/.env
-frontend/.env
 node_modules/
-frontend/node_modules/
 package-lock.json
-frontend/package-lock.json
 backend/dataset.csv
 backend/.DS_Store
 .DS_Store
-frontend/README.md
-build/
+.npmignore

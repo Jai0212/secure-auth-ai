@@ -182,7 +182,8 @@ def is_safe(
     attempts: List[int],
     curr_attempts: int,
 ) -> bool:
-    """Based on the AI model and the statistical anomaly detection, decides whether the login attempt is safe or not"""
+    """Based on the AI model and the statistical anomaly detection, decides whether the login attempt is safe or not
+    True means safe"""
 
     # print(coords, devices, times, attempts, curr_attempts)
 
@@ -191,6 +192,14 @@ def is_safe(
     curr_coords = coords_float.pop()
     curr_device = devices.pop()
     curr_time = times.pop()
+
+    if (
+        len(coords_float) == 0
+        or len(devices) == 0
+        or len(times) == 0
+        or len(attempts) == 0
+    ):  # If sign up
+        return True
 
     distance_change_var = distance_change(coords_float, curr_coords)
     device_change_var = device_change(devices, curr_device)
@@ -224,5 +233,5 @@ def is_safe(
         ]
     )
 
-    print("No. of trues: " + str(number_of_trues))
+    # print("No. of unsafe predictions: " + str(number_of_trues))
     return not number_of_trues >= 3

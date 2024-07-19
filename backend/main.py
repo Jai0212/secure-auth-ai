@@ -16,6 +16,74 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # The functions are called from app.py
 
 
+def initialize_package(other_details: List[str] = None) -> Tuple[str, bool, str]:
+    """This function needs to be called FIRST to generate a unique token that refers to the table.
+    After this the user can begin using the rest of the package functions
+
+    If you make a mistake in creating the table, call this function again to get a new token
+    other_details should NOT contain the following: id, password, total_logins, prev_locations, prev_devices, prev_logins, attempts, all_attempts
+    All other data will be stored as a string
+    """
+    cur = None
+    conn = None
+
+    try:
+        uid = str(uuid.uuid4())
+
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor()
+
+        columns = [
+            sql.SQL("id SERIAL PRIMARY KEY"),
+            sql.SQL("password VARCHAR(100) NOT NULL"),
+            sql.SQL("total_logins INT DEFAULT 0"),
+            sql.SQL("prev_locations VARCHAR(100)[][] DEFAULT ARRAY[]::VARCHAR(100)[]"),
+            sql.SQL("prev_devices VARCHAR(200)[] DEFAULT ARRAY[]::VARCHAR(200)[]"),
+            sql.SQL("prev_logins TIMESTAMP[] DEFAULT ARRAY[]::TIMESTAMP[]"),
+            sql.SQL("attempts INT DEFAULT 0"),
+            sql.SQL("all_attempts INT[] DEFAULT ARRAY[]::INT[]"),
+            sql.SQL("mfa_key VARCHAR(100)"),
+        ]
+
+        if other_details:
+            if (
+                ("id" in other_details)
+                or ("password" in other_details)
+                or ("total_logins" in other_details)
+                or ("prev_locations" in other_details)
+                or ("prev_devices" in other_details)
+                or ("prev_logins" in other_details)
+                or ("attempts" in other_details)
+                or ("all_attempts" in other_details)
+                or ("mfa_key" in other_details)
+            ):
+                return "", False, "Reserved column name used"
+
+            for column_name in other_details:
+                columns.append(
+                    sql.SQL("{} VARCHAR(100)").format(sql.Identifier(column_name))
+                )
+
+        create_table_query = sql.SQL("CREATE TABLE IF NOT EXISTS {} ( {} );").format(
+            sql.Identifier(uid), sql.SQL(", ").join(columns)
+        )
+
+        cur.execute(create_table_query)
+
+        conn.commit()
+
+        return uid, True, "Table created"
+
+    except Exception as e:
+        return "", False, f"Error in creating table: {e}"
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+
 def sign_up(
     SECURE_AUTH_AI_TABLE_KEY: str,
     password: str,
@@ -37,7 +105,9 @@ def sign_up(
     try:
         if unique_identifiers and other_details:
             for identifier in unique_identifiers:
-                if get_user_details(identifier, other_details[identifier]):
+                if get_user_details(
+                    SECURE_AUTH_AI_TABLE_KEY, identifier, other_details[identifier]
+                )[0]:
                     return (
                         "",
                         False,
@@ -600,7 +670,8 @@ def _set_values(
     wrong_password: bool = False,
     sign_up: bool = False,
 ) -> Union[bool, str]:
-    """Sets the default table values. Please report to creator in case of any error in this function"""
+    """Sets the default table values. Please report to creator in case of any error in this function.
+    Returns a string if success, otherwise boolean"""
 
     conn = None
     cur = None
@@ -713,71 +784,3 @@ def _is_correct_password(provided_password: str, tokenized_password: str) -> boo
     return bcrypt.checkpw(
         provided_password.encode("utf-8"), tokenized_password.encode("utf-8")
     )
-
-
-def initialize_package(other_details: List[str] = None) -> Tuple[str, bool, str]:
-    """This function needs to be called FIRST to generate a unique token that refers to the table.
-    After this the user can begin using the rest of the package functions
-
-    If you make a mistake in creating the table, call this function again to get a new token
-    other_details should NOT contain the following: id, password, total_logins, prev_locations, prev_devices, prev_logins, attempts, all_attempts
-    All other data will be stored as a string
-    """
-    cur = None
-    conn = None
-
-    try:
-        uid = str(uuid.uuid4())
-
-        conn = psycopg2.connect(DATABASE_URL)
-        cur = conn.cursor()
-
-        columns = [
-            sql.SQL("id SERIAL PRIMARY KEY"),
-            sql.SQL("password VARCHAR(100) NOT NULL"),
-            sql.SQL("total_logins INT DEFAULT 0"),
-            sql.SQL("prev_locations VARCHAR(100)[][] DEFAULT ARRAY[]::VARCHAR(100)[]"),
-            sql.SQL("prev_devices VARCHAR(200)[] DEFAULT ARRAY[]::VARCHAR(200)[]"),
-            sql.SQL("prev_logins TIMESTAMP[] DEFAULT ARRAY[]::TIMESTAMP[]"),
-            sql.SQL("attempts INT DEFAULT 0"),
-            sql.SQL("all_attempts INT[] DEFAULT ARRAY[]::INT[]"),
-            sql.SQL("mfa_key VARCHAR(100)"),
-        ]
-
-        if other_details:
-            if (
-                ("id" in other_details)
-                or ("password" in other_details)
-                or ("total_logins" in other_details)
-                or ("prev_locations" in other_details)
-                or ("prev_devices" in other_details)
-                or ("prev_logins" in other_details)
-                or ("attempts" in other_details)
-                or ("all_attempts" in other_details)
-                or ("mfa_key" in other_details)
-            ):
-                return "", False, "Reserved column name used"
-
-            for column_name in other_details:
-                columns.append(
-                    sql.SQL("{} VARCHAR(100)").format(sql.Identifier(column_name))
-                )
-
-        create_table_query = sql.SQL("CREATE TABLE IF NOT EXISTS {} ( {} );").format(
-            sql.Identifier(uid), sql.SQL(", ").join(columns)
-        )
-
-        cur.execute(create_table_query)
-
-        conn.commit()
-
-        return uid, True, "Table created"
-
-    except Exception as e:
-        return "", False, f"Error in creating table: {e}"
-
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
