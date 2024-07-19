@@ -1,21 +1,21 @@
 # SecureAuthAI
 
 [![npm version](https://img.shields.io/npm/v/secure-auth-ai.svg)](https://www.npmjs.com/package/secure-auth-ai)
+![npm](https://img.shields.io/npm/dt/secure-auth-ai)
+![Frameworks](https://img.shields.io/badge/supports-React%20%7C%20Vue%20%7C%20Angular-blue)
 
 
-SecureAuthAI offers web developers a comprehensive solution for implementing secure sign-in functionalities.  
+🔐 SecureAuthAI offers web developers a comprehensive solution for implementing secure sign-in functionalities.  
 
-This npm package integrates multi-factor authentication (MFA), real-time PostgreSQL database management, statistical anomaly detection using Z-score calculation, and a custom AI model.  
+This **npm** package integrates **multi-factor authentication** (MFA), real-time **PostgreSQL** database management, statistical **anomaly detection**, and a custom **AI model**. Designed to enhance login security, it automates **user management** tasks and ensures robust protection against unauthorized access.  
 
-Designed to enhance login security, it automates user management tasks and ensures robust protection against unauthorized access.  
-
-It integrates seamlessly with popular web frameworks like React, Vue, and Angular.
+It integrates seamlessly with popular web frameworks like **React**, **Vue**, and **Angular**.
 
 
 ## Features
-- **AI Model:** Custom AI model for detecting unsafe login attempts based on location, device, time, and number of attempts.
+- **AI-Based Risk Assessment:** Custom AI model detects unsafe login attempts based on location, device, time, and attempts.
 - **Anomaly Detection:** Statistical methods (Z-Score Calculation) to identify anomalies and prevent unauthorized access.
-- **MFA Integration:** Multi-Factor Authentication using a secret key to enhance login security.
+- **MFA Integration:** Enhances security with multi-factor authentication using a secret key.
 - **Realtime PostgreSQL Database:** Store user details securely with customizable functions provided out-of-the-box.
 - **Hassle-Free Implementation:** Pre-made functions handle database interactions, eliminating the need for manual API calls.
 - **Security:** Passwords are tokenized, and user-specific details are automatically managed to prevent security breaches.
@@ -49,7 +49,7 @@ import { initializePackageSAA, signUpSAA } from 'secure-auth-ai';
 
 All functions are asynchronous and should be used with axios for HTTP requests:  
 ```bash
-const response = await initializePackageSAA()
+const response = await initializePackageSAA();
 ```
 
 Each response has three attributes to it:  
@@ -57,7 +57,7 @@ Each response has three attributes to it:
 - **success** - true if request was successful, false otherwise
 - **message** - message for debugging in case of an error or a success message
 
-When you first use the package, you must call the function `initializePackageSAA()` which will give you a token which must be used to refer to your table in other functions. This token is the first parameter in all other functions.
+When you first use the package, you must call the function `initializePackageSAA()` which will give you a token that refers to your table. This token is the first parameter in all other functions.
 
 
 ## Example
@@ -71,15 +71,15 @@ const signUpResponse = await signUpSAA(SECURE_AUTH_AI_TABLE_KEY, "hello", {"emai
 if (signUpResponse.success) {
     const updateResponse = await updateUserDetailsSAA(SECURE_AUTH_AI_TABLE_KEY, "email", "placeholder@example.com", {"phone_number": "+199999999"});
 
-    console.log(updateResponse.message)
+    console.log(updateResponse.message);
 
     const detailsResponse = await getUserDetailsSAA(SECURE_AUTH_AI_TABLE_KEY, "email", "placeholder@example.com");
 
-    console.log(detailsResponse.value)
+    console.log(detailsResponse.value);
 }
 ```
 
-Everytime the function `logInSAA` is called, using the AI model and anomaly detection, it is checked whether the login attempt is safe or not. If it is not safe, you are required to call `verifyMfaSSA` to do the MFA.
+Everytime the function `logInSAA()` is called, using the AI model and anomaly detection, it is checked whether the login attempt is safe or not. If it is not safe, you are required to call `verifyMfaSSA()` to do the MFA.
 
 **NOTE**: Initally it can take about a minute to get a response as the backend needs to load up.
 
@@ -103,9 +103,9 @@ For detailed usage of each function, refer to the `api.js` file.
 
 ## Technical Aspects
 
-* **Backend**: Python backend hosted on Render.
-* **Database**: PostgreSQL hosted on Neon.
-* **Package**: Written in JavaScript, published on npm
+* **Backend**: Python backend hosted on Render
+* **Database**: PostgreSQL hosted on Neon
+* **Package**: JavaScript and Node.js, published on npm
 * **AI Model**:
     * Created using:
         * XGBoost Classifier

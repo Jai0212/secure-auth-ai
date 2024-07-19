@@ -1,7 +1,7 @@
 {
     "name": "secure-auth-ai",
     "version": "1.0.6",
-    "description": "A package designed for web developers seeking to implement secure sign-up and log-in functionalities with advanced security measures...",
+    "description": "A package for advanced sign-in security, including MFA, real-time PostgreSQL management, AI-based risk assessment, and anomaly detection. Compatible with React, Vue, and Angular, SecureAuthAI automates user management and enhances login protection.",
     "main": "api.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
